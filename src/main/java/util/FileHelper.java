@@ -1,14 +1,19 @@
 package util;
 
+import model.SequenceInfo;
+
 import java.io.*;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
  * Created by nammi on 21/10/17.
  */
 public class FileHelper {
-    public static HashMap<String,Integer> readSequenceFile(String filename, HashMap<String,Integer> map){
+    // HashMap()
+    public static HashMap<String,String> readSequenceFile(String filename, HashMap<String,String> map){
         File file = new File(filename);
         FileReader fileReader = null;
         BufferedReader bufferedReader;
@@ -26,18 +31,17 @@ public class FileHelper {
                 if(line.contains(">")) {
                     if(id!=null){
                        // System.out.println(stringBuffer.toString());
-                        map.put(stringBuffer.toString().toUpperCase(),Integer.parseInt(id));
+                        map.put(stringBuffer.toString().toUpperCase(),id);
                         id =null;
                         stringBuffer.delete(0,stringBuffer.length());
                     }
-                    String[] firstPart = line.split(":");
-                    String[] idparts = firstPart[1].split(" ");
-                    id = idparts[0];
+                    String[] firstPart = line.split(">");
+                    id = firstPart[1];
                     continue;
                 }
                 stringBuffer.append(line);
             }
-            map.put(stringBuffer.toString().toUpperCase(),Integer.parseInt(id));
+            map.put(stringBuffer.toString().toUpperCase(),id);
         }catch (IOException e){
             throw new IllegalArgumentException(e.getMessage());
         }finally {
@@ -51,6 +55,8 @@ public class FileHelper {
         }
         return map;
     }
+
+
 
     public static HashMap<Character, Integer> readAlphaFile(String fileName, HashMap<Character,Integer> letters){
         File file = new File(fileName);
